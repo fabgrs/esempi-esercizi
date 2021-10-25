@@ -5,8 +5,8 @@ def function(a):
 if __name__ == '__main__':
     i = 10
     words = [1, 2, "ciao", 4, 5, 6]
-    for i in words:
-        print(i)
+    for i, elem in enumerate(words):
+        print("elemento numero ", i, " ",elem)
 
     dict = {"a": "aa", "b": "bb"}
     print(dict["a"])
