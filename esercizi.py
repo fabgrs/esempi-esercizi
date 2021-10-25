@@ -1,9 +1,10 @@
 def function(a):
     print(a)
 
+
 if __name__ == '__main__':
-    i=10
-    words=[1,2,"ciao",4,5,6]
+    i = 10
+    words = [1, 2, "ciao", 4, 5, 6]
     for i in words:
         print(i)
 
