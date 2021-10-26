@@ -84,7 +84,6 @@ def len_list(elenco):
 
 
 # Funzione che inverte una stringa
-# Funzione che restituisce la lunghezza di una lista
 def reverser(stringa):
     if stringa is None:
         return None
@@ -99,6 +98,40 @@ def reverser(stringa):
     for i, char in enumerate(stringa):
         reverse += char
     return reverse
+
+
+def is_palindroma(word):
+    cursor = int((len(word)/2))
+    print(cursor)
+    #if len(word) % 2 == 0:
+    #    cursor = int(len(word)/2)
+    #else:
+    #    cursor = int((len(word)/2)+1)
+    for i in range(0, cursor):
+        print(i)
+        print(word[i], word[len(word)-1-i])
+        if word[i] != word[len(word)-i-1]:
+            return False
+    return True
+
+def smart_is_palindroma(word):
+    reverse_word = word[::-1]
+    return reverse_word==word
+
+def istogram_generator(elenco):
+    for i, elem in enumerate(elenco):
+        stringa = ""
+        for j in range(0, elem):
+            stringa += "*"
+        print(elem, stringa)
+        print("*" * elem)
+    return
+
+def len_words(elenco):
+    elenco_len = []
+    for i, elem in enumerate(elenco):
+        elenco_len.append(len(elem))
+    return elenco_len
 
 if __name__ == '__main__':
     '''i = 10
@@ -135,10 +168,8 @@ if __name__ == '__main__':
     # Esercizio 6: moltiplica tutti gli elementi di una lista
     print(product_list([1, 2, 3]))
 
-    # Esercizio 7: implementare la funzione len()
-    print(len_list([1, 2, 3]))
-
-    #print(reverser("abcd"))
+    # Esercizio 7: restituire l'inverso di una stringa
+    print(reverser("abcd"))
 
     a = "abcdefghi"
 
@@ -154,3 +185,15 @@ if __name__ == '__main__':
        0  1  2  3  4  5  6  7  8
       -9 -8 -7 -6 -5 -4 -3 -2 -1'''
 
+    # Esercizio 8: scrivere una funzione che riconose se una parola è palindroma oppure no
+    print(is_palindroma("inani"))
+    print(smart_is_palindroma("kayak"))
+
+    # Esercizio 9: implementare la funzione len()
+    print(len_list([1, 2, 3]))
+
+    # Esercizio 10: in base ai valori restistuire istogrammi di asterischi
+    istogram_generator([3, 5, 7, 9])
+
+    # Esercizio 11: data una lista di stringhe restituire la corrisponde lista contenente le lungheze delle stringhe
+    print(len_words(["ciao", "a", "abba", "tre"]))
