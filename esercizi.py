@@ -100,6 +100,7 @@ def reverser(stringa):
     return reverse
 
 
+# Funzione che verifica se una parola è palindroma o meno
 def is_palindroma(word):
     cursor = int((len(word)/2))
     print(cursor)
@@ -114,10 +115,14 @@ def is_palindroma(word):
             return False
     return True
 
+
+# Funzione "smart" che verifica se una parola è palindroma o meno
 def smart_is_palindroma(word):
     reverse_word = word[::-1]
     return reverse_word==word
 
+
+# Funzione che genera istogrammi di *
 def istogram_generator(elenco):
     for i, elem in enumerate(elenco):
         stringa = ""
@@ -127,11 +132,59 @@ def istogram_generator(elenco):
         print("*" * elem)
     return
 
+
+# Funzione che restituisce elenco delle lunghezze delle stringhe di una lista
 def len_words(elenco):
     elenco_len = []
     for i, elem in enumerate(elenco):
         elenco_len.append(len(elem))
     return elenco_len
+
+
+# Funzione per calcolare frequenza lettere in una stringa
+def frequenzimetro(word):
+    print(word)
+    dict = {}
+    for i, elem in enumerate(word):
+        if elem not in dict:
+            dict[elem] = 1
+        else:
+            dict[elem] = dict[elem] + 1
+    print(dict)
+    #for i, elem in enumerate(word):
+    #    dict[elem] = dict[elem]+1
+    #print(dict)
+    return dict
+
+
+# Verificare se un elemento è in una lsta e restituire l'indice
+def check_elem(elem, list):
+    for i, value in enumerate(list):
+        if elem == value:
+            return (f"Il valore {elem} è presente nella lista in posizione {i}")
+    return (f"Il valore {elem} non è presente nella lista")
+    #return list.index(elem)
+
+# Funzione che implementa il linguaggio rovarspraket
+def rovarspraket(word):
+    temp = word
+    while True:
+        translate = ""
+        print(temp)
+        for i, elem in enumerate(temp):
+            if elem in "aeiou" or elem == " ":
+                translate += elem
+            else:
+                translate += elem + "o" + elem
+        print(translate)
+        temp = ""
+        while temp == "":
+            answer = input("Vuoi tradurre un'altra frase? s/n \n")
+            if answer == "n":
+                return
+            temp = input("Inserisci la frase")
+
+
 
 if __name__ == '__main__':
     '''i = 10
@@ -197,3 +250,13 @@ if __name__ == '__main__':
 
     # Esercizio 11: data una lista di stringhe restituire la corrisponde lista contenente le lungheze delle stringhe
     print(len_words(["ciao", "a", "abba", "tre"]))
+
+    # Esercizio 12: Scrivi una funzione a cui passare una stringa come parametro, e che restituisca un dizionario
+    # rappresentante la "frequenza di comparsa" di ciscun carattere componente la stringa.
+    print(frequenzimetro("aaabcddfgddra"))
+
+    # Esercizio 13: verificare se un valore è presente in una lista e restituiire l'indice
+    print(check_elem(4, [1,2,3,4,5]))
+
+    # Esercizio 14: implementare il linguaggio rovarspraket
+    print(rovarspraket("Ciao! questo programma traduce un testo passato in rövarspråket. Ció significa che raddoppia ogni consonante delle parole e ci mette una o in mezzo..."))
