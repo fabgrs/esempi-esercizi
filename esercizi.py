@@ -1,3 +1,5 @@
+import xlrd
+
 def function(a):
     print(a)
 
@@ -185,6 +187,120 @@ def rovarspraket(word):
             temp = input("Inserisci la frase")
 
 
+# Esercizio bonus: scrivere una funzione che converte un file excel in un file json
+def excel_to_txt(file_name):
+    loc = file_name
+    # To open Workbook
+    wb = xlrd.open_workbook(loc)
+    sheet = wb.sheet_by_index(0)
+    # For row 0 and column 0
+    nrows = sheet.nrows
+    ncols = sheet.ncols
+    intestazioni = []
+    for i in range(0, 8):
+        intestazioni.append(sheet.cell_value(0, i))
+    print(intestazioni)
+
+    elements = []
+    for i in range(1, 789):
+        element = []
+        for j, field in enumerate(intestazioni):
+            element.append((field, sheet.cell_value(i, j)))
+        elements.append(element)
+
+    print(len(elements))
+    line = ""
+    file_txt = open("db_alimenti.txt", "a")
+    for elem in elements:
+        i = 0
+        for value in elem:
+            if i != 7:
+                #file_txt.write("("+str(value[0])+":"+str(value[1])+");")
+                file_txt.write(str(value[1]) + ";")
+                line += str(value[1]) + ";"
+            else:
+                #file_txt.write("("+str(value[0])+":"+str(value[1])+")")
+                file_txt.write(str(value[1])+ ";")
+                line += str(value[1]) + ";"
+            i += 1
+        file_txt.write(str(value[1]))
+        file_txt.write("\n")
+
+    file_txt.close()
+
+def similarity_list(file_name):
+    loc = file_name
+    # To open Workbook
+    wb = xlrd.open_workbook(loc)
+    sheet = wb.sheet_by_index(0)
+    # For row 0 and column 0
+    nrows = sheet.nrows
+    ncols = sheet.ncols
+    intestazioni = []
+    for i in range(0, 3):
+        intestazioni.append(sheet.cell_value(0, i))
+    print(intestazioni)
+
+    elements = []
+    for i in range(1, 789):
+        element = []
+        for j, field in enumerate(intestazioni):
+            element.append((field, sheet.cell_value(i, j)))
+        elements.append(element)
+
+    new_element = []
+    new_elements = []
+
+    for i, elem in enumerate(elements):
+        temp_list = []
+        temp_list.append(elem[0][1].lower())
+        print(elem)
+        for j, elem2 in enumerate(elements):
+            if len(temp_list) == 4:
+                break
+            #if elem2[2][1] >= (float(elem[2][1])- 5.0) and elem2[2][1] <= (elem[2][1]+ 5) and elem[0][1] != elem2[0][1]:
+            if elem2[2][1] == float(elem[2][1]) and elem[0][1] != elem2[0][1]:
+                temp_list.append(elem2[0][1].lower())
+        if len(temp_list) != 1:
+            new_elements.append(temp_list)
+
+    print(new_elements[0])
+
+    file_txt = open("similarità.txt", "a")
+    for elem in new_elements:
+        i = 0
+        for value in elem:
+            if i != 2:
+                # file_txt.write("("+str(value[0])+":"+str(value[1])+");")
+                file_txt.write(value + ";")
+            else:
+                # file_txt.write("("+str(value[0])+":"+str(value[1])+")")
+                file_txt.write(value)
+            i += 1
+        file_txt.write("\n")
+
+    file_txt.close()
+
+
+    '''print(len(elements))
+    line = ""
+    file_txt = open("db_alimenti.txt", "a")
+    for elem in elements:
+        i = 0
+        for value in elem:
+            if i != 7:
+                #file_txt.write("("+str(value[0])+":"+str(value[1])+");")
+                file_txt.write(str(value[1]) + ";")
+                line += str(value[1]) + ";"
+            else:
+                #file_txt.write("("+str(value[0])+":"+str(value[1])+")")
+                file_txt.write(str(value[1])+ ";")
+                line += str(value[1]) + ";"
+            i += 1
+        file_txt.write(str(value[1]))
+        file_txt.write("\n")
+
+    file_txt.close()'''
 
 if __name__ == '__main__':
     '''i = 10
@@ -259,4 +375,8 @@ if __name__ == '__main__':
     print(check_elem(4, [1,2,3,4,5]))
 
     # Esercizio 14: implementare il linguaggio rovarspraket
-    print(rovarspraket("Ciao! questo programma traduce un testo passato in rövarspråket. Ció significa che raddoppia ogni consonante delle parole e ci mette una o in mezzo..."))
+    #print(rovarspraket("Ciao! questo programma traduce un testo passato in rövarspråket. Ció significa che raddoppia ogni consonante delle parole e ci mette una o in mezzo..."))
+
+    #excel_to_txt("db_alimenti.xls")
+    similarity_list("db_alimenti.xls")
+
