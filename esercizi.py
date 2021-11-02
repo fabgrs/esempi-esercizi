@@ -1,4 +1,5 @@
 import xlrd
+import re
 
 def function(a):
     print(a)
@@ -186,49 +187,7 @@ def rovarspraket(word):
                 return
             temp = input("Inserisci la frase")
 
-
-# Esercizio bonus: scrivere una funzione che converte un file excel in un file json
-def excel_to_txt(file_name):
-    loc = file_name
-    # To open Workbook
-    wb = xlrd.open_workbook(loc)
-    sheet = wb.sheet_by_index(0)
-    # For row 0 and column 0
-    nrows = sheet.nrows
-    ncols = sheet.ncols
-    intestazioni = []
-    for i in range(0, 8):
-        intestazioni.append(sheet.cell_value(0, i))
-    print(intestazioni)
-
-    elements = []
-    for i in range(1, 789):
-        element = []
-        for j, field in enumerate(intestazioni):
-            element.append((field, sheet.cell_value(i, j)))
-        elements.append(element)
-
-    print(len(elements))
-    line = ""
-    file_txt = open("db_alimenti.txt", "a")
-    for elem in elements:
-        i = 0
-        for value in elem:
-            if i != 7:
-                #file_txt.write("("+str(value[0])+":"+str(value[1])+");")
-                file_txt.write(str(value[1]) + ";")
-                line += str(value[1]) + ";"
-            else:
-                #file_txt.write("("+str(value[0])+":"+str(value[1])+")")
-                file_txt.write(str(value[1])+ ";")
-                line += str(value[1]) + ";"
-            i += 1
-        file_txt.write(str(value[1]))
-        file_txt.write("\n")
-
-    file_txt.close()
-
-def similarity_list(file_name):
+def read_excel(file_name):
     loc = file_name
     # To open Workbook
     wb = xlrd.open_workbook(loc)
@@ -242,44 +201,129 @@ def similarity_list(file_name):
     print(intestazioni)
 
     elements = []
-    for i in range(1, 789):
+    for i in range(1, nrows):
         element = []
         for j, field in enumerate(intestazioni):
-            element.append((field, sheet.cell_value(i, j)))
+            valore = sheet.cell_value(i, j)
+            #if j==0:
+            #    valore = re.sub(r' \[.*?\]', '', str(sheet.cell_value(i, j)))
+            element.append((field, valore))
         elements.append(element)
 
+    return elements
+
+
+def write_txt(elements, txt_name):
+    line = ""
+    file_txt = open(txt_name, "a")
+    for elem in elements:
+        i = 0
+        for value in elem:
+            if i == 0:
+                # file_txt.write("("+str(value[0])+":"+str(value[1])+");")
+                file_txt.write(str(value[1]) + ";")
+                line += str(value[1]) + ";"
+            elif i == 2:
+                # file_txt.write("("+str(value[0])+":"+str(value[1])+")")
+                file_txt.write(str(value[1]))
+                line += str(value[1]) + ";"
+            i += 1
+        # file_txt.write(str(value[1]))
+        file_txt.write("\n")
+
+    file_txt.close()
+
+
+# Esercizio bonus: scrivere una funzione che converte un file excel in un file txt
+def excel_to_txt(file_name):
+    elements = read_excel(file_name)
+    txt_name = "db_alimenti.txt"
+    write_txt(elements, txt_name)
+
+
+def def_similarity_list(elements):
     new_element = []
     new_elements = []
 
     for i, elem in enumerate(elements):
         temp_list = []
         temp_list.append(elem[0][1].lower())
-        print(elem)
+        # print(elem)
+        temp_list.append(int(elem[2][1]))
         for j, elem2 in enumerate(elements):
-            if len(temp_list) == 4:
+            if len(temp_list) == 5:
                 break
-            #if elem2[2][1] >= (float(elem[2][1])- 5.0) and elem2[2][1] <= (elem[2][1]+ 5) and elem[0][1] != elem2[0][1]:
+            # if elem2[2][1] >= (float(elem[2][1])- 5.0) and elem2[2][1] <= (elem[2][1]+ 5) and elem[0][1] != elem2[0][1]:
             if elem2[2][1] == float(elem[2][1]) and elem[0][1] != elem2[0][1]:
                 temp_list.append(elem2[0][1].lower())
-        if len(temp_list) != 1:
+        if len(temp_list) != 2:
             new_elements.append(temp_list)
 
-    print(new_elements[0])
+    #print(len(new_elements))
+    return new_elements
+
+def list_to_string(new_elements):
+    new_elements_string = []
+    for j, elem in enumerate(new_elements):
+        i = 0
+        str_elem = ""
+        # file_txt.write(str(j)+";")
+        for value in elem:
+            if i != len(elem) - 1:
+                # file_txt.write("("+str(value[0])+":"+str(value[1])+");")
+                # file_txt.write(value + ";")
+                str_elem += str(value) + ";"
+            elif i == len(elem) - 1:
+                # file_txt.write("("+str(value[0])+":"+str(value[1])+")")
+                # file_txt.write(value)
+                str_elem += str(value)
+            i += 1
+        # print(str_elem)
+        new_elements_string.append(str_elem)
+    return new_elements_string
+
+
+def write_txt_format_row(new_elements_string, new_elements, filler_char):
+    max = 0
+    len_list = []
+    for elem in new_elements_string:
+        # print(elem, len(elem))
+        len_list.append(len(elem))
+        if len(elem) > max:
+            # print(len(elem))
+            max = len(elem)
+    print("valore max", max)
 
     file_txt = open("similarità.txt", "a")
-    for elem in new_elements:
+    for j, elem in enumerate(new_elements):
         i = 0
+        # file_txt.write(str(j)+";")
         for value in elem:
-            if i != 2:
+            if i != len(elem) - 1:
                 # file_txt.write("("+str(value[0])+":"+str(value[1])+");")
-                file_txt.write(value + ";")
-            else:
+                file_txt.write(str(value) + ";")
+            elif i == len(elem) - 1:
                 # file_txt.write("("+str(value[0])+":"+str(value[1])+")")
-                file_txt.write(value)
+                file_txt.write(str(value))
             i += 1
+        line_len = len_list[j]
+        temp = line_len
+        while temp < max:
+            file_txt.write(filler_char)
+            temp += 1
         file_txt.write("\n")
 
     file_txt.close()
+
+
+def similarity_list(file_name):
+    elements = read_excel(file_name)
+    new_elements = def_similarity_list(elements)
+    new_elements_string = list_to_string(new_elements)
+    filler_char = "!"
+    write_txt_format_row(new_elements_string, new_elements, filler_char)
+    #print("length ", len(new_elements_string), len(new_elements))
+
 
 
     '''print(len(elements))
@@ -377,6 +421,9 @@ if __name__ == '__main__':
     # Esercizio 14: implementare il linguaggio rovarspraket
     #print(rovarspraket("Ciao! questo programma traduce un testo passato in rövarspråket. Ció significa che raddoppia ogni consonante delle parole e ci mette una o in mezzo..."))
 
+    # Esercizio bonus: converte file excel in txt
     #excel_to_txt("db_alimenti.xls")
-    similarity_list("db_alimenti.xls")
+    # Esercizio bonus: estrae lista similarità da file excel e converte in file txt
+    #similarity_list("db_alimenti.xls")
+
 
