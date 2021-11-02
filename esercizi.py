@@ -1,5 +1,6 @@
 import xlrd
 import re
+import random
 
 def function(a):
     print(a)
@@ -168,6 +169,7 @@ def check_elem(elem, list):
     return (f"Il valore {elem} non è presente nella lista")
     #return list.index(elem)
 
+
 # Funzione che implementa il linguaggio rovarspraket
 def rovarspraket(word):
     temp = word
@@ -330,6 +332,155 @@ def similarity_list(file_name):
     write_txt_format_row(new_elements_string, new_elements, filler_char)
 
 
+# Funzione di supporto che verificare se una stringa può essere convertita in float e se è un numero maggiore di 0
+def is_positive_number(s):
+    try:
+        num = float(s)
+        if num < 0.0:
+            print("Non si accettano numeri negativi!")
+            return False
+        return True
+    except ValueError:
+        if s != "":
+            print("Il valore inserito non è un numero!")
+        return False
+
+
+def area_quadrato():
+    answer = ""
+    while not is_positive_number(answer):
+        answer = input(
+                "Inserisci lato quadrato \n")
+    lato = float(answer)
+    #print(lato*lato)
+    return lato*lato
+
+
+def area_rettangolo():
+    base = float(input(
+        "Inserisci base rettangolo \n"))
+    altezza = float(input(
+        "Inserisci altezza rettangolo \n"))
+    return base*altezza
+
+
+def area_cerchio():
+    raggio = float(input(
+        "Inserisci raggio cerchio \n"))
+    return 2*raggio*3.14
+
+
+def area_triangolo():
+    base = float(input(
+        "Inserisci base triangolo \n"))
+    altezza = float(input(
+        "Inserisci altezza triangoo \n"))
+    return (base*altezza)/2
+
+
+# Definizione switch-case tramite dizionario
+def switch_demo(argument):
+    switcher = {
+        "quadrato": 1,
+        "rettangolo": 2,
+        "cerchio": 3,
+        "triangolo": 4
+    }
+    return switcher.get(argument, "Forma non valida")
+
+# Funzione che calcola l'area di una forma in base all'input fornito dall'utente
+def calc_area(forma):
+    answer = switch_demo(forma)
+    if answer == 1:
+        return "L'area del {} è uguale a {}.".format(forma, area_quadrato())
+    elif answer == 2:
+        return "L'area del {} è uguale a {}.".format(forma, area_rettangolo())
+    elif answer == 3:
+        return "L'area del {} è uguale a {}.".format(forma, area_cerchio())
+    elif answer == 4:
+        return "L'area del {} è uguale a {}.".format(forma, area_triangolo())
+    print("Forma non valida")
+    return -1
+
+# Funzione che converte una misura in metri in una scala a scelta
+def convert(value, index):
+    if index == 1:
+        return value * 1.09361
+    elif index == 2:
+        return value * 39.3701
+    elif index == 3:
+        return value * 3.28084
+    elif index == 4:
+        return value * 0.000621371
+    return "Misurazione non valida"
+
+# Funzione che converte una misura in metri in quattro scale diverse
+def convert2(value):
+    converter = {
+        "iarde": value * 1.09361,
+        "pollici": value * 39.3701,
+        "piedi": value * 3.28084,
+        "miglia": value / 1609.344
+    }
+
+    for key in converter.keys():
+        print("{} metri equivalgono a {} {}".format(value, converter[key], key))
+
+
+# Funzione che converte giorni, ore e minuti in un totale di secondi
+def time_in_seconds(days, hours, minutes):
+    return (days * 24 * 60 * 60) + (hours * 60 * 60) + (minutes * 60)
+
+
+# Funzione che genera una password di 8 caratteri
+def soft_pwd():
+    pwd = ""
+    for i in range(8):
+        num = random.randint(33, 122)
+        pwd += chr(num)
+    return pwd
+
+
+# Funzione che genera un indirizzo MAC
+def gen_MAC():
+    mac_address = ""
+    for _ in range(5):
+        exa_0x = str(hex(random.randint(0, 255)))
+        exa = exa_0x.replace("0x", "")
+        mac_address += exa + ":"
+    exa_0x = str(hex(random.randint(0, 255)))
+    exa = exa_0x.replace("0x", "")
+    mac_address += exa
+    return mac_address
+
+
+# Funzione alternativa per generare indirizzo MAC
+def genera_mac():
+    char_set = "ABCDEF0123456789"
+    mac_addr = ""
+    due_punti = 0
+
+    for _ in range(6):
+        for _ in range(2):
+            mac_addr += random.choice(char_set)
+        if due_punti < 5:
+          mac_addr += ":"
+          due_punti += 1
+
+    return mac_addr
+
+
+# Funzione che dato un elenco di parole e una parola in input trova tutte le parole che fanno rima con l'input
+# (ultime tre lettere uguali)
+def rimario(word, list):
+    sim_list = []
+    for elem in list:
+        print(word[-3:], elem[-3:])
+        if word[-3:] == elem[-3:]:
+            sim_list.append(elem)
+    return sim_list
+
+
 if __name__ == '__main__':
     '''i = 10
     words = [1, 2, "ciao", 4, 5, 6]
@@ -409,5 +560,49 @@ if __name__ == '__main__':
     #excel_to_txt("db_alimenti.xls")
     # Esercizio bonus: estrae lista similarità da file excel e converte in file txt
     #similarity_list("db_alimenti.xls")
+
+    # Esercizio 15: calcolare area di una forma geometrica scelta dall'utente
+    #area = calc_area(answer)
+    #print(area)
+
+    '''area = -1
+    while area == -1:
+        answer = input(
+            "Per quale forma serve calcolare l'area? \n - Quadrato \n - Rettangolo \n - Cerchio \n - Triangolo \n")
+        area = calc_area(answer)
+        print(area)'''
+
+    # Esercizio 16: scrivere funzione che converte una misura in metri in scale differenti
+    converter = {
+        "iarde": 1,
+        "pollici": 2,
+        "piedi": 3,
+        "miglia": 4
+    }
+
+    meters = 4
+    measure = 1
+    print(convert2(meters))
+
+    # Esercizio 17: scrivere funzione che converte tre valori (giorni, ore, minuti) nel totale in secondi
+    days = 3
+    hours = 2
+    minutes = 59
+    print(time_in_seconds(days, hours, minutes))
+
+    # Esercizio 18: generare una password di 8 caratteri casuale
+    print(soft_pwd())
+
+    # Esercizio 19: generare indirizzo MAC casuale
+    print(gen_MAC())
+    print(genera_mac())
+
+    # Esercizio 20: data una parola in input, trovare tutte le altre parole presenti in un elenco che fanno rima
+    parola = "casa"
+    dizionario = ["ciao", "sgasa", "sa", "invasa", "gatto", "asa"]
+    print(rimario(parola, dizionario))
+
+
+
 
 
