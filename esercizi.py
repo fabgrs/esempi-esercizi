@@ -328,7 +328,7 @@ def similarity_list(file_name):
     new_elements_string = list_to_string(new_elements)
     filler_char = "!"
     write_txt_format_row(new_elements_string, new_elements, filler_char)
-    #print("length ", len(new_elements_string), len(new_elements))
+
 
 if __name__ == '__main__':
     '''i = 10
