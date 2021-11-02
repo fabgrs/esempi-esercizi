@@ -187,12 +187,13 @@ def rovarspraket(word):
                 return
             temp = input("Inserisci la frase")
 
+
+# Funzione che legge file excel e memorizza le righe in una lista
 def read_excel(file_name):
     loc = file_name
     # To open Workbook
     wb = xlrd.open_workbook(loc)
     sheet = wb.sheet_by_index(0)
-    # For row 0 and column 0
     nrows = sheet.nrows
     ncols = sheet.ncols
     intestazioni = []
@@ -213,6 +214,7 @@ def read_excel(file_name):
     return elements
 
 
+# Funzione che data una lista di elementi, converte ogni elemento in una riga di un file testuale
 def write_txt(elements, txt_name):
     line = ""
     file_txt = open(txt_name, "a")
@@ -241,6 +243,7 @@ def excel_to_txt(file_name):
     write_txt(elements, txt_name)
 
 
+# Funzione che definisce una lista di elementi simili per KCal
 def def_similarity_list(elements):
     new_element = []
     new_elements = []
@@ -262,6 +265,8 @@ def def_similarity_list(elements):
     #print(len(new_elements))
     return new_elements
 
+
+# Funzione che converte una lista di valori in una stringa
 def list_to_string(new_elements):
     new_elements_string = []
     for j, elem in enumerate(new_elements):
@@ -283,6 +288,7 @@ def list_to_string(new_elements):
     return new_elements_string
 
 
+# Funzione che converte gli elementi di una lista in un file txt e formatta le righe (tutte le righe hanno la stessa lunghezza)
 def write_txt_format_row(new_elements_string, new_elements, filler_char):
     max = 0
     len_list = []
@@ -323,28 +329,6 @@ def similarity_list(file_name):
     filler_char = "!"
     write_txt_format_row(new_elements_string, new_elements, filler_char)
     #print("length ", len(new_elements_string), len(new_elements))
-
-
-
-    '''print(len(elements))
-    line = ""
-    file_txt = open("db_alimenti.txt", "a")
-    for elem in elements:
-        i = 0
-        for value in elem:
-            if i != 7:
-                #file_txt.write("("+str(value[0])+":"+str(value[1])+");")
-                file_txt.write(str(value[1]) + ";")
-                line += str(value[1]) + ";"
-            else:
-                #file_txt.write("("+str(value[0])+":"+str(value[1])+")")
-                file_txt.write(str(value[1])+ ";")
-                line += str(value[1]) + ";"
-            i += 1
-        file_txt.write(str(value[1]))
-        file_txt.write("\n")
-
-    file_txt.close()'''
 
 if __name__ == '__main__':
     '''i = 10
