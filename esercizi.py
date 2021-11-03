@@ -1,6 +1,9 @@
 import xlrd
 import re
 import random
+import string
+import platform
+import os
 
 def function(a):
     print(a)
@@ -481,6 +484,106 @@ def rimario(word, list):
     return sim_list
 
 
+order_list = []
+
+
+# Funzione che verifica se un libro è presente in libreria, decrementa il num di copie in caso di vendita
+def vendi_libri(library, book_name):
+    book_name_lower = book_name.lower()
+    if book_name_lower not in library:
+        order_list.append(book_name_lower)
+        return False, "Mi dispiace ma il libro non è disponibile al momento"
+    else:
+        num_copy = library.get(book_name_lower)
+        library[book_name_lower] = num_copy - 1
+        if library.get(book_name_lower) == 0:
+            library.pop(book_name_lower)
+        return True, "La vendita ha avuto successo"
+
+
+# Funzione che implementa crittografia ROT-13
+def critt_rot13(stringa):
+    alfa = string.ascii_lowercase
+    stringa_lower = stringa.lower()
+    cript = ""
+    for i, char in enumerate(stringa_lower):
+        ind = alfa.index(stringa_lower[i])
+        if ind < 13:
+            cript += alfa[ind+13]
+        else:
+            temp = ind - 13
+            cript += alfa[temp]
+    return cript
+
+# Funzione che implementa crittografia ROT-13 (versione alternativa)
+cifrario = {'a': 'n', 'b': 'o', 'c': 'p', 'd': 'q', 'e': 'r', 'f': 's', 'g': 't', 'h': 'u',
+            'i': 'v', 'j': 'w', 'k': 'x', 'l': 'y', 'm': 'z', 'n': 'a', 'o': 'b', 'p': 'c',
+            'q': 'd', 'r': 'e', 's': 'f', 't': 'g', 'u': 'h', 'v': 'i', 'w': 'j', 'x': 'k',
+            'y': 'l', 'z': 'm', 'A': 'N', 'B': 'O', 'C': 'P', 'D': 'Q', 'E': 'R', 'F': 'S',
+            'G': 'T', 'H': 'U', 'I': 'V', 'J': 'W', 'K': 'X', 'L': 'Y', 'M': 'Z', 'N': 'A',
+            'O': 'B', 'P': 'C', 'Q': 'D', 'R': 'E', 'S': 'F', 'T': 'G', 'U': 'H', 'V': 'I',
+            'W': 'J', 'X': 'K', 'Y': 'L', 'Z': 'M'}
+
+
+def basic_rot(stringa):
+    nuova_stringa = ""
+    for carattere in stringa:
+        if carattere in cifrario:
+            nuova_stringa += cifrario[carattere]
+        else:
+            nuova_stringa += carattere
+    return nuova_stringa
+
+
+# Funzione che calcola il fattoriale di un numero
+def fattoriale(num):
+    if num == 0:
+        return 1
+    return num * fattoriale(num-1)
+
+
+# Funzione  funzione ricorsiva che restituisce in output i numeri della sequenza di Fibonacci,
+# entro una soglia specifica impostata dall'utente
+def fibonacci(start, soglia, lista):
+    if start == 0:
+        lista.append(0)
+        lista.append(1)
+    val = lista[len(lista)-1]+lista[len(lista)-2]
+    if start >= soglia:
+        return lista
+    lista.append(val)
+    fibonacci(start+1, soglia, lista)
+    return lista
+
+
+def fibonacci2(n):
+    if n <= 1:
+        return n
+    else:
+        return fibonacci2(n - 1) + fibonacci2(n - 2)
+
+
+# Funzione che restituisce le informazini relative al SO
+def get_info_so():
+    print("Il Sistema attualmente in uso è: " + platform.system())
+    print("Info Release: " + platform.release())
+
+
+# Funzione che restiutisce il corrispondente codice ascii dato un char
+def get_ascii_code(char):
+    return ord(char)
+
+
+# Funzione che restituisce la dimensione della directory di lavoro corrente
+def get_folder_size(folder_path):
+    size = 0
+    for path, dirs, files in os.walk(folder_path):
+        #print(path, dirs, files)
+        for f in files:
+            fp = os.path.join(path, f)
+            size += os.path.getsize(fp)
+    return size
+
 if __name__ == '__main__':
     '''i = 10
     words = [1, 2, "ciao", 4, 5, 6]
@@ -602,7 +705,37 @@ if __name__ == '__main__':
     dizionario = ["ciao", "sgasa", "sa", "invasa", "gatto", "asa"]
     print(rimario(parola, dizionario))
 
+    # Esercizio 21: definire una funzione che verifica se un libro è presente in libreria e conclude 'acquisto
+    libreria = {
+        "2001: odissea nello spazio": 2,
+        "moby dick": 3,
+        "i promessi sposi": 1
+    }
 
+    '''for i in range(5):
+        answer = input("Quale libro desidera? \n")
+        result, message = vendi_libri(libreria, answer)
+        print(message)
+        print("Libri da ordinare: ", order_list)'''
 
+    # Esercizio 22: implementare crittografia ROT-13
+    print(critt_rot13("ciao"))
+    print(basic_rot("ciao"))
 
+    # Esercizio 23: implementare funzione che calcola il fattoriale di un numero
+    fattoriale(5)
 
+    # Esercizio 24: implementare serie di fibonacci (con soglia)
+    print(fibonacci(0, 20, []))
+    limite=4
+    for num in range(1, limite + 1):
+        print(fibonacci2(num))
+
+    # Esercizio 25: scrivere funzione che restituisce info riguardo il sistema operativo
+    get_info_so()
+
+    # Esercizio 26: scrivere funzione che restituisce il corrispondente codice ascci dato un carattere
+    print(get_ascii_code("a"))
+
+    # Esercizio 27: scrivere funzione che restituisce la dimensione della directory di lavoro corrente
+    print(get_folder_size(os.getcwd()))
