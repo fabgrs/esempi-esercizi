@@ -4,9 +4,8 @@ import random
 import string
 import platform
 import os
-
-def function(a):
-    print(a)
+import smtplib
+import shutil
 
 
 # Funzione che restituisce il max tra due numeri
@@ -22,7 +21,6 @@ def max_number(a, b):
 # Funzione che restituisce il max tra tre numeri
 def max_three_numbers(a, b, c):
     return max(max(a, b), c)
-
 
 
 # Funzione che restituisce il max in un elenco di numeri
@@ -293,7 +291,8 @@ def list_to_string(new_elements):
     return new_elements_string
 
 
-# Funzione che converte gli elementi di una lista in un file txt e formatta le righe (tutte le righe hanno la stessa lunghezza)
+# Funzione che converte gli elementi di una lista in un file txt e formatta le righe
+# (tutte le righe hanno la stessa lunghezza)
 def write_txt_format_row(new_elements_string, new_elements, filler_char):
     max = 0
     len_list = []
@@ -391,6 +390,7 @@ def switch_demo(argument):
     }
     return switcher.get(argument, "Forma non valida")
 
+
 # Funzione che calcola l'area di una forma in base all'input fornito dall'utente
 def calc_area(forma):
     answer = switch_demo(forma)
@@ -405,6 +405,7 @@ def calc_area(forma):
     print("Forma non valida")
     return -1
 
+
 # Funzione che converte una misura in metri in una scala a scelta
 def convert(value, index):
     if index == 1:
@@ -416,6 +417,7 @@ def convert(value, index):
     elif index == 4:
         return value * 0.000621371
     return "Misurazione non valida"
+
 
 # Funzione che converte una misura in metri in quattro scale diverse
 def convert2(value):
@@ -584,6 +586,85 @@ def get_folder_size(folder_path):
             size += os.path.getsize(fp)
     return size
 
+
+# Funzione che invia mail tramite gmail
+def send_mail(sender, receiver, text):
+    smtp_server = "127.0.0.1"
+    port = 1025
+    server = smtplib.SMTP(smtp_server, port)
+    sender_email = sender
+    receiver_email = receiver
+    message = text
+    server.sendmail(sender, receiver, message)
+    '''print("""
+        Questa è la funzione Postino: spedisce eMail utilizzando Gmail!
+        Server: smtp.gmail.com
+        Porta: 587
+        Si richiedono: Username, Password, Destinatario, Oggetto e Messaggio da inviare.
+        """)
+
+    username = "fabio.grs96@gmail.com"
+    password = "ciao"
+    destinatario = "fabio.grs96@gmail.com"
+    oggetto = "prova"
+    messaggio = "mail di prova"
+    contenuto = f"Subject: {oggetto}\n\n{messaggio}"
+    print("Sto effettuando la connessione col Server...")
+    email = smtplib.SMTP("smtp.gmail.com", 587)
+    email.ehlo()
+    email.starttls()
+    email.login(username, password)
+    print("Sto inviando...")
+    email.sendmail(username, destinatario, contenuto)
+    email.quit()
+    print("Messaggio Inviato!")'''
+
+
+# Funzione che ricerca tutti i file pdf in un determinato percorso
+def search_pdf(path):
+    if not os.path.isdir(path):
+        print(f"Il percorso inserito '{path}' risulta non essere un percorso idoneo. Verifica e riprova, grazie.\n")
+        return None
+    contatore = 0
+    pdf_list = []
+    for cartella, sottocartelle, files in os.walk(path):
+        for file in files:
+            if file.endswith(".pdf"):
+                pdf = os.path.join(cartella, file)
+                #print(f"Trovato file pdf: {pdf}\n")
+                contatore += 1
+                pdf_list.append(pdf)
+    return contatore, pdf_list
+
+
+# Funzione che crea copie di backup di un file
+def create_backup(file_path, backup_path):
+    if not os.path.isdir(backup_path):
+        print(f"Il percorso di backup inserito '{backup_path}' risulta non essere un percorso idoneo. Verifica e riprova, grazie.\n")
+        return None
+    if not os.path.isfile(file_path):
+        print(f"Il percorso del file da copiare '{file_path}' risulta non essere un percorso idoneo. Verifica e riprova, grazie.\n")
+        return None
+    onlydir = [f for f in os.listdir(backup_path) if os.path.isdir(os.path.join(backup_path, f))]
+    #print(onlydir)
+    if "Backup" not in onlydir:
+        print("la cartella di backup non esiste")
+        os.mkdir(os.path.join(backup_path, "Backup"))
+        print("cartella di backup creata")
+    else:
+        print("cartella di backup già esistente")
+    complete_backup_path = os.path.join(backup_path, "Backup")
+    file_name = os.path.basename(file_path)
+    list = file_name.split(".")
+    backup_file_name = ""
+    for i, elem in enumerate(list):
+        if i == 1:
+            backup_file_name += "_backup."
+        backup_file_name += elem
+    complete_path = os.path.join(complete_backup_path, backup_file_name)
+    shutil.copyfile(file_path, complete_path)
+
+
 if __name__ == '__main__':
     '''i = 10
     words = [1, 2, "ciao", 4, 5, 6]
@@ -739,3 +820,29 @@ if __name__ == '__main__':
 
     # Esercizio 27: scrivere funzione che restituisce la dimensione della directory di lavoro corrente
     print(get_folder_size(os.getcwd()))
+
+    # Esercizio 28: scrivere funzione che invia mail tramite gmail
+    # send_mail("fabio.grs96@gmail.com", "ale.grs96@gmail.com", "Subject: Hi there. This message is sent from Python.")
+
+    # Esercizio 29: La funzione dovrà avere le seguenti caratteristiche:
+    #
+    #     Il percorso fornito dovrà essere anzitutto validato, in quanto deve portare a una cartella esistente
+    #     La funzione dovrà fornire un elenco dei file pdf (con/relativo/percorso) man mano che questi vengono trovati
+    #     In fine la funzione dovrà fornire in output il totale dei file .pdf che sono stati trovati durante la
+    #     scansione.
+    path = "C:/Users/Fabio/Desktop/Utilities"
+    # lista, counter = search_pdf(path)
+    # print(lista)
+    # print(counter)
+
+    lista = [["a","b"], ["c","d"], ["e", "f"]]
+    for list1, list2 in lista:
+        print(list1, list2)
+
+    # for cartella, sottocartelle, files in os.walk(path):
+    #    print(cartella, sottocartelle, files)
+
+    # Esercizio 30: Scrivi una funzione "file_backup" che sia in grado di effettuare copie di backup
+    # di determinati tipi di file
+    file_path = "C:/Users/Fabio/Desktop/AA_Template libretti formazione_trasversale_NEW.xlsx"
+    create_backup(file_path, path)
